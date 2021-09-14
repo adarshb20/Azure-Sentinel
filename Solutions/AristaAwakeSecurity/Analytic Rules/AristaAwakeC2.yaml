@@ -1,0 +1,27 @@
+id: 55fb2630-fc2f-4d6b-ab7e-ce79dece4ea7
+name: C2 via AwakeSecurity
+description: |
+  'Triggered Command and Control Detections by Awake Security'
+severity: Medium
+requiredDataConnectors:
+  - connectorId: AristaAwakeSecurity
+    dataTypes:
+      - AwakeSecurityAI
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - CommandandControl
+relevantTechniques:
+  - TA0011
+query: |
+  union CommonSecurityLog
+  | where DeviceVendor == "Arista Networks" and DeviceProduct == "Awake Security"
+  | where Activity startswith "C2:"
+entityMappings:
+  - entityType: Host
+    fieldMappings:
+      - identifier: HostName
+        columnName: SourceHostName
+version: 1.0.0
