@@ -92,7 +92,7 @@
         },
         {
             "title": "2. Forward Awake Adversarial Model match results to a CEF collector.",
-            "description": "Perform the following steps to forward Awake Adversarial Model match results to a CEF collector listening on UDP port **514** at IP **192.168.0.1**:\n- Navigate to the Detection Management Skills page in the Awake UI.\n- Click + Add New Skill.\n- Set the Expression field to,\n>integrations.cef.udp { destination: \"192.168.0.1\" , port: 514 , severity: Warning }\n- Set the Title field to a descriptive name like,\n>Forward Awake Adversarial Model match result to Azure Sentinel.\n- Set the Reference Identifier to something easily discoverable like,\n>integrations.cef.sentinel-forwarder\n- Click Save.\n\nNote: Within a few minutes of saving the definition and other fields the system will begin sending all-new model match results to the CEF events collector as they are detected.\n\nFor more information, refer to the **Adding a Security Information and Event Management Push Integration** page from the Help Documentation in the Awake UI."
+            "description": "Perform the following steps to forward Awake Adversarial Model match results to a CEF collector listening on UDP port **514** at IP **192.168.0.1**:\n- Navigate to the Detection Management Skills page in the Awake UI.\n- Click + Add New Skill.\n- Set the Expression field to,\n>integrations.cef.tcp { destination: \"192.168.0.1\", port: 514, secure: false, severity: Warning }\n- Set the Title field to a descriptive name like,\n>Forward Awake Adversarial Model match result to Azure Sentinel.\n- Set the Reference Identifier to something easily discoverable like,\n>integrations.cef.sentinel-forwarder\n- Click Save.\n\nNote: Within a few minutes of saving the definition and other fields the system will begin sending all-new model match results to the CEF events collector as they are detected.\n\nFor more information, refer to the **Adding a Security Information and Event Management Push Integration** page from the Help Documentation in the Awake UI."
         },
         {
             "title": "3. Validate connection",
@@ -120,16 +120,16 @@
         "version": "1.0.0",
         "kind": "dataConnector",
         "source": {
-            "kind": "sourceRepository",
-            "name": "Azure/Azure-Sentinel"
+            "kind": "solution",
+            "name": "Awake Security"
         },
         "author": {
             "name": "Awake Security"
         },
         "support": {
             "tier": "developer",
-            "name": "Awake Security",
-            "email": "awake-ir@arista.com",
+            "name": "Arista - Awake Security",
+            "email": "support-security@arista.com",
             "link": "https://awakesecurity.com/"
         }
     }
