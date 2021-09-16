@@ -1,24 +1,22 @@
 id: 55fb2630-fc2f-4d6b-ab7e-ce79dece4ea7
-name: C2 via AwakeSecurity
+name: Awake Security - High Severity Events
 description: |
-  'Triggered Command and Control Detections by Awake Security'
+  'Triggers an incident for every HostName if High Severity Events are found'
 severity: Medium
 requiredDataConnectors:
   - connectorId: AristaAwakeSecurity
     dataTypes:
-      - AwakeSecurityAI
+      - AwakeSecurity
 queryFrequency: 1h
 queryPeriod: 1h
 triggerOperator: gt
 triggerThreshold: 0
-tactics:
-  - CommandandControl
-relevantTechniques:
-  - TA0011
 query: |
-  union CommonSecurityLog
+  CommonSecurityLog 
   | where DeviceVendor == "Arista Networks" and DeviceProduct == "Awake Security"
-  | where Activity startswith "C2:"
+  | summarize Models=make_set(Activity), ASPMatchURLs=make_set(DeviceCustomString2), SourceIPs=make_set(SourceIP), 
+    DestinationIPs=make_set(DestinationIP), ModelMatchCount=sum(EventCount), MaxSeverity=max(toint(LogSeverity)) by SourceHostName
+  | where MaxSeverity > 6; 
 entityMappings:
   - entityType: Host
     fieldMappings:
