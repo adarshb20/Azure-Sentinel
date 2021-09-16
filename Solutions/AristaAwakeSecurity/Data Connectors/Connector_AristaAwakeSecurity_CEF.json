@@ -6,7 +6,7 @@
     "graphQueries": [
         {
             "metricName": "Total data received",
-            "legend": "AwakeSecurityAI",
+            "legend": "AwakeSecurity",
             "baseQuery": "CommonSecurityLog\n| where DeviceVendor == \"Arista Networks\"\n| where DeviceProduct == \"Awake Security\""
         }
     ],
@@ -22,7 +22,7 @@
     ],
     "dataTypes": [
         {
-            "name": "CommonSecurityLog (AwakeSecurityAI)",
+            "name": "CommonSecurityLog (AwakeSecurity)",
             "lastDataReceivedQuery": "CommonSecurityLog\n| where DeviceVendor == \"Arista Networks\"\n| where DeviceProduct == \"Awake Security\"\n| summarize Time = max(TimeGenerated)\n| where isnotempty(Time)"
         }
     ],
