@@ -1,0 +1,68 @@
+$schema: https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#
+contentVersion: 1.0.0.0
+parameters:
+  workspace:
+    type: String
+resources:
+  - id: '[concat(resourceId(''Microsoft.OperationalInsights/workspaces/providers'', parameters(''workspace''), ''Microsoft.SecurityInsights''),''/alertRules/e6ed108a-8a53-448b-a2a9-0ccb6e5ff930'')]'
+    name: '[concat(parameters(''workspace''),''/Microsoft.SecurityInsights/e6ed108a-8a53-448b-a2a9-0ccb6e5ff930'')]'
+    type: Microsoft.OperationalInsights/workspaces/providers/alertRules
+    kind: Scheduled
+    apiVersion: 2021-03-01-preview
+    properties:
+      displayName: Awake Security - Model Matches With Multiple Destinations By Device
+      description: |
+        Create an incident for every device with multiple possibly malicious destinations.
+      severity: Medium
+      enabled: true
+      query: "CommonSecurityLog \n| where DeviceVendor == \"Arista Networks\" and DeviceProduct == \"Awake Security\"\n| summarize Models=make_set(Activity), ASPMatchURLs=make_set(DeviceCustomString2), SourceIPs=make_set(SourceIP), DestinationIPs=make_set(DestinationIP), ModelMatchCount=sum(EventCount), MaxSeverity=max(todecimal  (LogSeverity)) by SourceHostName\n| where array_length(DestinationIPs) > 1; \n"
+      queryFrequency: PT1H
+      queryPeriod: PT1H
+      triggerOperator: GreaterThan
+      triggerThreshold: 0
+      suppressionDuration: PT5H
+      suppressionEnabled: false
+      tactics: []
+      alertRuleTemplateName: null
+      incidentConfiguration:
+        createIncident: true
+        groupingConfiguration:
+          enabled: true
+          reopenClosedIncident: true
+          lookbackDuration: P3D
+          matchingMethod: Selected
+          groupByEntities:
+            - Host
+          groupByAlertDetails: []
+          groupByCustomDetails:
+            - Device
+      eventGroupingSettings:
+        aggregationKind: AlertPerResult
+      alertDetailsOverride:
+        alertDisplayNameFormat: Awake Security - Model Matches With Multiple Destinations On Device {{SourceHostName}}
+        alertDescriptionFormat: |
+          Device {{SourceHostName}} communicated with multiple possibly malicious destinations.  The destination IPs were:
+
+          {{DestinationIPs}}
+
+          The associated with Awake model(s) were:
+
+          {{Models}}
+        alertTacticsColumnName: null
+        alertSeverityColumnName: null
+      customDetails:
+        Models_Matched: Models
+        Matches_ASP_URLs: ASPMatchURLs
+        Device: SourceHostName
+        Matches_Count: ModelMatchCount
+        Matches_Max_Severity: MaxSeverity
+        Matches_Dest_IPs: DestinationIPs
+      entityMappings:
+        - entityType: Host
+          fieldMappings:
+            - identifier: HostName
+              columnName: SourceHostName
+        - entityType: IP
+          fieldMappings:
+            - identifier: Address
+              columnName: SourceIPs
